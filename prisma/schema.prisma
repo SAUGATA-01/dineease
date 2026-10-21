@@ -135,6 +135,7 @@ model Booking {
   date           DateTime      @db.Date
   guests         Int
   status         BookingStatus @default(CONFIRMED)
+  isActive       Boolean?      @default(true)
   specialRequest String?
   createdAt      DateTime      @default(now())
 
@@ -143,8 +144,8 @@ model Booking {
   table      RestaurantTable @relation(fields: [tableId], references: [id])
   slot       Slot            @relation(fields: [slotId], references: [id])
 
-  // Ek table, ek slot, ek date pe sirf ek booking ho sakti hai (double booking se bachata hai)
-  @@unique([tableId, slotId, date])
+  // Ek table, ek slot, ek date pe sirf ek ACTIVE booking (cancelled mein isActive = null hota hai)
+  @@unique([tableId, slotId, date, isActive])
   @@index([restaurantId, date])
   @@index([customerId])
 }
