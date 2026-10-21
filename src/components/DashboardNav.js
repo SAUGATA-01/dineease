@@ -5,10 +5,16 @@ import { usePathname } from "next/navigation";
 
 export default function DashboardNav({ restaurantId }) {
   const path = usePathname();
+  const base = `/dashboard/${restaurantId}`;
 
   const items = [
-    { href: `/dashboard/${restaurantId}`, label: "📅 Bookings" },
-    { href: `/dashboard/${restaurantId}/edit`, label: "✏️ Details edit" },
+    { href: base, label: "📅 Bookings" },
+    { href: `${base}/menu`, label: "🍛 Menu" },
+    { href: `${base}/tables`, label: "🪑 Tables" },
+    { href: `${base}/slots`, label: "🕒 Slots" },
+    { href: `${base}/holidays`, label: "🚫 Holidays" },
+    { href: `${base}/photo`, label: "📷 Photo" },
+    { href: `${base}/edit`, label: "✏️ Details" },
   ];
 
   return (
