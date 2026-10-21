@@ -32,7 +32,7 @@ export default function SignupPage() {
       body: JSON.stringify(form),
     });
     const data = await res.json();
-    if (!res.ok) return data.error || "Kuch galat hua";
+    if (!res.ok) return data.error || "Something went wrong";
     setDemoOtp(data.demoOtp || null);
     setCounter((c) => c + 1);
     setStep("otp");
@@ -52,7 +52,7 @@ export default function SignupPage() {
 
   return (
     <main className="mx-auto max-w-md p-6">
-      <h1 className="mb-6 text-2xl font-bold">Naya account banao</h1>
+      <h1 className="mb-6 text-2xl font-bold">Create a new account</h1>
 
       {step === "form" ? (
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -74,10 +74,10 @@ export default function SignupPage() {
             ))}
           </div>
 
-          <input name="name" value={form.name} onChange={update} placeholder="Poora naam" className={input} required />
-          <input name="phone" value={form.phone} onChange={update} placeholder="Phone number (10 digit)" inputMode="numeric" className={input} required />
-          <input name="email" type="email" value={form.email} onChange={update} placeholder="Email (optional)" className={input} />
-          <input name="password" type="password" value={form.password} onChange={update} placeholder="Password (kam se kam 8 characters)" className={input} required />
+          <input name="name" value={form.name} onChange={update} placeholder="Full name" className={input} required />
+          <input name="phone" value={form.phone} onChange={update} placeholder="Phone number (10 digits)" inputMode="numeric" className={input} required />
+          <input name="email" type="email" value={form.email} onChange={update} placeholder="Email address (optional)" className={input} />
+          <input name="password" type="password" value={form.password} onChange={update} placeholder="Password (minimum 8 characters)" className={input} required />
 
           {error && <p className="text-sm text-red-600">{error}</p>}
 
@@ -86,12 +86,12 @@ export default function SignupPage() {
             disabled={loading}
             className="w-full rounded-lg bg-orange-600 p-3 font-semibold text-white disabled:opacity-50"
           >
-            {loading ? "Bhej rahe hain..." : "OTP bhejo"}
+            {loading ? "Sending..." : "Send OTP"}
           </button>
 
           <p className="text-center text-sm">
-            Pehle se account hai?{" "}
-            <Link href="/login" className="text-orange-700 underline">Login karo</Link>
+            Already have an account?{" "}
+            <Link href="/login" className="text-orange-700 underline">Login here</Link>
           </p>
         </form>
       ) : (
@@ -104,7 +104,7 @@ export default function SignupPage() {
             onResend={send}
           />
           <button onClick={() => setStep("form")} className="mt-4 w-full text-sm text-gray-500">
-            ← Details badlo
+            ← Change details
           </button>
         </>
       )}
