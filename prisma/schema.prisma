@@ -1,0 +1,188 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+// ---------- ENUMS ----------
+
+enum Role {
+  CUSTOMER
+  RESTAURANT
+  ADMIN
+}
+
+enum RestaurantStatus {
+  PENDING
+  APPROVED
+  BLOCKED
+}
+
+enum BookingStatus {
+  CONFIRMED
+  CANCELLED
+  COMPLETED
+  NO_SHOW
+}
+
+enum OtpPurpose {
+  SIGNUP
+  LOGIN
+}
+
+// ---------- MODELS ----------
+
+model User {
+  id           String   @id @default(cuid())
+  name         String
+  phone        String   @unique
+  email        String?  @unique
+  passwordHash String
+  role         Role     @default(CUSTOMER)
+  isVerified   Boolean  @default(false)
+  isBlocked    Boolean  @default(false)
+  createdAt    DateTime @default(now())
+
+  restaurants Restaurant[]
+  bookings    Booking[]
+  reviews     Review[]
+}
+
+model City {
+  id          String       @id @default(cuid())
+  name        String       @unique
+  restaurants Restaurant[]
+}
+
+model Restaurant {
+  id          String           @id @default(cuid())
+  ownerId     String
+  cityId      String
+  name        String
+  address     String
+  description String?
+  cuisine     String
+  photoUrl    String?
+  photos      String[]
+  openingTime String           @default("11:00")
+  closingTime String           @default("23:00")
+  mapLink     String?
+  costForTwo  Int?
+  status      RestaurantStatus @default(PENDING)
+  createdAt   DateTime         @default(now())
+
+  owner       User              @relation(fields: [ownerId], references: [id])
+  city        City              @relation(fields: [cityId], references: [id])
+  tables      RestaurantTable[]
+  slots       Slot[]
+  menuItems   MenuItem[]
+  bookings    Booking[]
+  reviews     Review[]
+  closedDates ClosedDate[]
+
+  @@index([cityId, status])
+}
+
+model RestaurantTable {
+  id           String  @id @default(cuid())
+  restaurantId String
+  tableNumber  Int
+  capacity     Int
+  isActive     Boolean @default(true)
+
+  restaurant Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+  bookings   Booking[]
+
+  @@unique([restaurantId, tableNumber])
+}
+
+model Slot {
+  id           String  @id @default(cuid())
+  restaurantId String
+  time         String // "19:00" format
+  isActive     Boolean @default(true)
+
+  restaurant Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+  bookings   Booking[]
+
+  @@unique([restaurantId, time])
+}
+
+model MenuItem {
+  id           String  @id @default(cuid())
+  restaurantId String
+  name         String
+  description  String?
+  price        Int
+  category     String
+  photoUrl     String?
+  isVeg        Boolean @default(true)
+  isAvailable  Boolean @default(true)
+
+  restaurant Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+}
+
+model Booking {
+  id             String        @id @default(cuid())
+  customerId     String
+  restaurantId   String
+  tableId        String
+  slotId         String
+  date           DateTime      @db.Date
+  guests         Int
+  status         BookingStatus @default(CONFIRMED)
+  specialRequest String?
+  createdAt      DateTime      @default(now())
+
+  customer   User            @relation(fields: [customerId], references: [id])
+  restaurant Restaurant      @relation(fields: [restaurantId], references: [id])
+  table      RestaurantTable @relation(fields: [tableId], references: [id])
+  slot       Slot            @relation(fields: [slotId], references: [id])
+
+  // Ek table, ek slot, ek date pe sirf ek booking ho sakti hai (double booking se bachata hai)
+  @@unique([tableId, slotId, date])
+  @@index([restaurantId, date])
+  @@index([customerId])
+}
+
+model Review {
+  id           String   @id @default(cuid())
+  customerId   String
+  restaurantId String
+  rating       Int
+  comment      String?
+  isHidden     Boolean  @default(false)
+  createdAt    DateTime @default(now())
+
+  customer   User       @relation(fields: [customerId], references: [id])
+  restaurant Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+
+  @@unique([customerId, restaurantId])
+}
+
+model ClosedDate {
+  id           String   @id @default(cuid())
+  restaurantId String
+  date         DateTime @db.Date
+  reason       String?
+
+  restaurant Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+
+  @@unique([restaurantId, date])
+}
+
+model Otp {
+  id        String     @id @default(cuid())
+  phone     String
+  otpHash   String
+  purpose   OtpPurpose
+  expiresAt DateTime
+  attempts  Int        @default(0)
+  createdAt DateTime   @default(now())
+
+  @@index([phone])
+}
