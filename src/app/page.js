@@ -45,7 +45,7 @@ export default async function HomePage() {
         <h2 className="mb-6 text-center text-2xl font-bold">We Are Available in These Cities</h2>
         <div className="flex flex-wrap justify-center gap-3">
           {cities.map((c) => (
-            <Link key={c.id} href="/cities" className="rounded-full border bg-white px-5 py-2 text-sm font-medium shadow-sm hover:border-orange-600 hover:text-orange-600">
+            <Link key={c.id} href={`/cities/${c.id}`} className="rounded-full border bg-white px-5 py-2 text-sm font-medium shadow-sm hover:border-orange-600 hover:text-orange-600">
               {c.name}
             </Link>
           ))}
