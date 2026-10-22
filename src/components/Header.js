@@ -36,6 +36,9 @@ export default async function Header() {
           {session ? (
             <>
               <span className="text-gray-600">Hi, {session.name}</span>
+              <Link href="/change-password" className="text-orange-700 hover:underline">
+                Change Password
+              </Link>
               <LogoutButton />
             </>
           ) : (
