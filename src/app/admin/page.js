@@ -16,6 +16,7 @@ function Stat({ label, value, href, highlight }) {
 
 export default async function AdminOverviewPage() {
   const today = todayIST();
+  const openTickets = await prisma.supportTicket.count({ where: { status: "OPEN" } });
   const weekEnd = addDays(today, 6);
 
   const [usersByRole, restByStatus, bookByStatus, todayCount, perDay, top] = await Promise.all([
@@ -69,6 +70,12 @@ export default async function AdminOverviewPage() {
       {pending > 0 && (
         <Link href="/admin/restaurants?status=PENDING" className="mb-6 block rounded-lg border border-yellow-400 bg-yellow-50 p-4 text-yellow-900">
           ⏳ <b>{pending}</b> restaurant{pending === 1 ? "" : "s"} are waiting for approval. Click to view →
+        </Link>
+      )}
+
+      {openTickets > 0 && (
+        <Link href="/admin/tickets" className="mb-4 block rounded-lg border border-blue-300 bg-blue-50 p-4 text-blue-900">
+          🎫 <b>{openTickets}</b> support ticket{openTickets === 1 ? "" : "s"} open hain. Dekhne ke liye click karo →
         </Link>
       )}
 

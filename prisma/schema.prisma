@@ -34,6 +34,11 @@ enum OtpPurpose {
   LOGIN
 }
 
+enum TicketStatus {
+  OPEN
+  CLOSED
+}
+
 // ---------- MODELS ----------
 
 model User {
@@ -50,6 +55,7 @@ model User {
   restaurants Restaurant[]
   bookings    Booking[]
   reviews     Review[]
+  tickets     SupportTicket[]
 }
 
 model City {
@@ -186,4 +192,23 @@ model Otp {
   createdAt DateTime   @default(now())
 
   @@index([phone])
+}
+
+model SupportTicket {
+  id        String       @id @default(cuid())
+  userId    String?
+  name      String
+  email     String
+  phone     String?
+  subject   String
+  message   String
+  status    TicketStatus @default(OPEN)
+  adminNote String?
+  createdAt DateTime     @default(now())
+  closedAt  DateTime?
+
+  user User? @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([status, createdAt])
+  @@index([email])
 }
