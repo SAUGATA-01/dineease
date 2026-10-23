@@ -59,6 +59,6 @@ npm run dev
 ```
 
 ## Known Limitations
-- OTP is in demo mode (no SMS provider connected)
+- OTP is sent to the user's email address via Gmail SMTP. Phone numbers are not verified; only email addresses are verified.
 - Online payments are not supported
 - The first request may be slightly slow on free hosting
