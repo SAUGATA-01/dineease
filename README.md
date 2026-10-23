@@ -2,7 +2,7 @@
 
 A full-stack web app where customers can book tables at restaurants, owners can manage their bookings and menus, and admins can control the entire platform.
 
-**Live:** https://YAHAN-APNA-VERCEL-LINK.vercel.app
+**Live:** https://dineease-alpha.vercel.app
 
 ## Tech Stack
 - Next.js (App Router) + React + Tailwind CSS
