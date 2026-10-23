@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 
-export default function OtpForm({ phone, purpose, demoOtp, onResend }) {
+export default function OtpForm({ phone, purpose, demoOtp, sentTo, onResend }) {
   const [otp, setOtp] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -47,7 +47,13 @@ export default function OtpForm({ phone, purpose, demoOtp, onResend }) {
   return (
     <form onSubmit={submit} className="space-y-4">
       <p className="text-sm text-gray-600">
-        A 6-digit OTP has been sent to <b>+91 {phone}</b>.
+        {sentTo ? (
+          <>
+            A 6-digit OTP has been sent to <b>{sentTo}</b>. Check your <b>Spam</b> folder as well as your inbox.
+          </>
+        ) : (
+          <>A 6-digit OTP has been sent.</>
+        )}
       </p>
 
       {demoOtp && (

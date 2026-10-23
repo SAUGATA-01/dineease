@@ -11,6 +11,7 @@ export default function LoginPage() {
   const [counter, setCounter] = useState(0);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [sentTo, setSentTo] = useState(null);
 
   function update(e) {
     let { name, value } = e.target;
@@ -27,6 +28,7 @@ export default function LoginPage() {
     const data = await res.json();
     if (!res.ok) return data.error || "Something went wrong";
     setDemoOtp(data.demoOtp || null);
+    setSentTo(data.sentTo || null);
     setCounter((c) => c + 1);
     setStep("otp");
     return null;
@@ -74,6 +76,7 @@ export default function LoginPage() {
             phone={form.phone}
             purpose="LOGIN"
             demoOtp={demoOtp}
+            sentTo={sentTo}
             onResend={send}
           />
           <button onClick={() => setStep("form")} className="mt-4 w-full text-sm text-gray-500">

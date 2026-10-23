@@ -63,10 +63,11 @@ export async function POST(request) {
     return NextResponse.json({ error: "Your phone number is not verified. Please verify it from the Sign Up page first" }, { status: 403 });
   }
 
-  const result = await createAndSendOtp(phone, "LOGIN");
+  const result = await createAndSendOtp(phone, "LOGIN", user.email);
   if (result.error) {
     return NextResponse.json({ error: result.error }, { status: 429 });
   }
 
-  return NextResponse.json({ ok: true, demoOtp: result.demoOtp });
+  return NextResponse.json({ ok: true, demoOtp: result.demoOtp, sentTo: result.sentTo });
+  
 }

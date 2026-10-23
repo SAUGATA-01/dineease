@@ -187,6 +187,7 @@ model ClosedDate {
 model Otp {
   id        String     @id @default(cuid())
   phone     String
+  email     String?
   otpHash   String
   purpose   OtpPurpose
   expiresAt DateTime
@@ -194,6 +195,7 @@ model Otp {
   createdAt DateTime   @default(now())
 
   @@index([phone])
+  @@index([email])
 }
 
 model SupportTicket {

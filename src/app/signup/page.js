@@ -17,6 +17,7 @@ export default function SignupPage() {
   const [counter, setCounter] = useState(0);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [sentTo, setSentTo] = useState(null);
 
   function update(e) {
     let { name, value } = e.target;
@@ -34,6 +35,7 @@ export default function SignupPage() {
     const data = await res.json();
     if (!res.ok) return data.error || "Something went wrong";
     setDemoOtp(data.demoOtp || null);
+    setSentTo(data.sentTo || null);
     setCounter((c) => c + 1);
     setStep("otp");
     return null;
@@ -76,8 +78,8 @@ export default function SignupPage() {
 
           <input name="name" value={form.name} onChange={update} placeholder="Full name" className={input} required />
           <input name="phone" value={form.phone} onChange={update} placeholder="Phone number (10 digits)" inputMode="numeric" className={input} required />
-          <input name="email" type="email" value={form.email} onChange={update} placeholder="Email address (optional)" className={input} />
-          <input name="password" type="password" value={form.password} onChange={update} placeholder="Password (minimum 8 characters)" className={input} required />
+          <input name="email" type="email" value={form.email} onChange={update} placeholder="Email address " className={input} required/>
+          <input name="password" type="password" value={form.password} onChange={update} placeholder="Password (minimum 8 characters (letters + numbers))" className={input} required />
 
           {error && <p className="text-sm text-red-600">{error}</p>}
 
@@ -101,6 +103,7 @@ export default function SignupPage() {
             phone={form.phone}
             purpose="SIGNUP"
             demoOtp={demoOtp}
+            sentTo={sentTo}
             onResend={send}
           />
           <button onClick={() => setStep("form")} className="mt-4 w-full text-sm text-gray-500">
