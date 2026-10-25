@@ -2,7 +2,7 @@
 
 A full-stack web app where customers can book tables at restaurants, owners can manage their bookings and menus, and admins can control the entire platform.
 
-**Live:** https://dineease-alpha.vercel.app
+**Live:** https://dineease-pink.vercel.app
 
 ## Tech Stack
 - Next.js (App Router) + React + Tailwind CSS
